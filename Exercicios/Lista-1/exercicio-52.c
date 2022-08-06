@@ -9,30 +9,50 @@
 
 int main()
 {
+    //Codigo com vetores
 
-    float premio, jogador1, jogador2, jogador3, premioJogador1, premioJogador2, premioJogador3, totalApostas;
+    float jogador[3], premioJogador[3], totalApostas = 0, premio;
 
     printf("Digite o valor do premio: \n");
     scanf("%f", &premio);
 
-    printf("Valor apostado pelo jogador 1: \n");
-    scanf("%f", &jogador1);
+    for (int i = 0; i < 3; i++) {
+        printf("Valor apostado pelo jogador %d:\n", i+1);
+        scanf("%f", &jogador[i]);
 
-    printf("Valor apostado pelo jogador 2: \n");
-    scanf("%f", &jogador2);
+        totalApostas += jogador[i];
+    }
 
-    printf("Valor apostado pelo jogador 3: \n");
-    scanf("%f", &jogador3);
+    for (int i = 0; i < 3; i++) {
+        premioJogador[i] = premio * (jogador[i]/totalApostas);
+        printf("Valor ganho pelo jogador %d: %.2f\n", i+1, premioJogador[i]);
+    }
+    
+    //Codigo sem vetores
 
-    totalApostas = jogador1 + jogador2 + jogador3;
+    // float premio, jogador1, jogador2, jogador3, premioJogador1, premioJogador2, premioJogador3, totalApostas = 0;
 
-    premioJogador1 = premio * (jogador1/totalApostas);
-    premioJogador2 = premio * (jogador2/totalApostas);
-    premioJogador3 = premio * (jogador3/totalApostas);
+    // printf("Digite o valor do premio: \n");
+    // scanf("%f", &premio);
 
-    printf("Valor ganho pelo jogador 1: %.2f\n", premioJogador1);
-    printf("Valor ganho pelo jogador 2: %.2f\n", premioJogador2);
-    printf("Valor ganho pelo jogador 3: %.2f\n", premioJogador3);
+    // printf("Valor apostado pelo jogador 1: \n");
+    // scanf("%f", &jogador1);
+
+    // printf("Valor apostado pelo jogador 2: \n");
+    // scanf("%f", &jogador2);
+
+    // printf("Valor apostado pelo jogador 3: \n");
+    // scanf("%f", &jogador3);
+
+    // totalApostas = jogador1 + jogador2 + jogador3;
+
+    // premioJogador1 = premio * (jogador1/totalApostas);
+    // premioJogador2 = premio * (jogador2/totalApostas);
+    // premioJogador3 = premio * (jogador3/totalApostas);
+
+    // printf("Valor ganho pelo jogador 1: %.2f\n", premioJogador1);
+    // printf("Valor ganho pelo jogador 2: %.2f\n", premioJogador2);
+    // printf("Valor ganho pelo jogador 3: %.2f\n", premioJogador3);
 
     return 0;
 }
