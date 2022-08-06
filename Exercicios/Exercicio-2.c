@@ -16,15 +16,23 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#define MAX 80
+#define MAX 100
+
+struct Pessoa{
+    char* nome;
+    int idade;
+    int telefone;
+}pessoa[MAX];
 
 void Menu();
 void AdicionarNome();
 void RemoverNome();
 void ListarNomes();
 
-int main() {
+char* AlocarMemoria(int tamanho);
 
+int main() {
+    int indiceRegistro = 0;
     int opcao;
 
     do {
@@ -34,8 +42,13 @@ int main() {
         system("cls");
 
         switch (opcao) {
+            case 0:
+                printf("saiu");
+                break;
+
             case 1:
                 printf("1 opcao");
+                AdicionarNome(indiceRegistro++);
                 break;
 
             case 2:
@@ -54,7 +67,7 @@ int main() {
                 printf("Opcao invalida! Tente novamente!\n");
                 break;
         }
-    } while (opcao <= 0 || opcao > 4);
+    } while (opcao != 0);
     
     return 0;
 }
@@ -68,12 +81,11 @@ Imprime o menu para interacao com o usuario
 */
 void Menu() {
 
-    int opcao;
-
     printf("1) Adicionar nome\n");
     printf("2) Remover nome\n");
-    printf("3) Listar\n");
-    printf("4) Sair\n");
+    printf("3) Buscar\n");
+    printf("4) Listar\n");
+    printf("0) Sair\n");
 }
 
 /*
@@ -83,9 +95,33 @@ AdicionarNome
 Funcao para adicionar nomes ao vetor
 ================================================
 */
-void AdicionarNome() {
-    //Declara um buffer para efetuar a leitura
-    char buffer[MAX];
+void AdicionarNome(int indiceRegistro) {
+    char dado[MAX];
 
-    gets(buffer);
+    printf("Digite o nome: \n");
+    scanf("%s", dado);
+    //X
+    setbuf(stdin, NULL);
+
+    pessoa[indiceRegistro].nome = AlocarMemoria(strlen(dado));
+    strcpy(pessoa[indiceRegistro].nome, dado);
+}
+
+/*
+================================================
+AlocarMemoria
+ 
+Funcao para alocar corretamente o espaco de memoria para os dados
+
+================================================
+*/
+char* AlocarMemoria(int tamanho){
+    char* dado = NULL;
+    dado = (char*) malloc(sizeof(tamanho) * sizeof(char));
+
+    if(dado == NULL){
+        printf("ERRO: impossível alocar a quantidade de memória requisitada!");
+        exit(1);
+    }
+    return dado;
 }

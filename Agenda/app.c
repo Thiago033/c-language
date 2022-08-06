@@ -15,11 +15,10 @@ struct Pessoa{
 
 void exibirMenu(){
     printf("\n\tSelecione umas das opções a seguir:\n");
-    printf("\t01 - Inserir contato\n"
-           "\t02 - Listar contatos\n"
-           "\t03 - Pesquisar contato\n"
-           "\t04 - Alterar contato\n"
-           "\t99 - Sair\n\n");
+    printf("1) Adicionar nome\n");
+    printf("2) Remover nome\n");
+    printf("3) Listar\n");
+    printf("4) Sair\n");
 }
 
 char* alocarMemoria(int tamanho){
