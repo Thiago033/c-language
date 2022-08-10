@@ -1,127 +1,141 @@
-//=======================================================
-// Lista 1
-// Exercício 2
-
-// Faça um programa que armazena nomes.
-// O programa deve armazenar todos os nomes na mesma string
-// O tamanho da string deve crescer e diminuir conforme nomes forem colocados ou removidos. Não pode ter desperdício de memória.
-
-// Faça o seguinte menu:
-// 1) Adicionar nome
-// 2) Remover nome
-// 3) Listar
-// 4) Sair
-//=======================================================
-
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#define MAX 100
+#include <string.h>
+#include <conio.h>
 
-struct Pessoa{
-    char* nome;
-    int idade;
-    int telefone;
-}pessoa[MAX];
+typedef struct
+{
+    char nome[30];
+    char email[30];
+    char telefone[20];
+} agenda;
 
-void Menu();
-void AdicionarNome();
-void RemoverNome();
-void ListarNomes();
+agenda* alocar();
+void cadastro(agenda*, int *);
+int realocar(agenda *, int);
+void consultar(agenda *,int);
 
-char* AlocarMemoria(int tamanho);
+int main()
+{
+    int resp;
+    int i = 0;
 
-int main() {
-    int indiceRegistro = 0;
-    int opcao;
+    agenda *p = alocar();
 
-    do {
+    while (resp != 9)
+    {
+        printf("\n1 - Cadastrar");
+        //printf("\n2 - Alterar");
+        printf("\n3 - Consultar");
+       // printf("\n4 - Excluir");
+       // printf("\n5 - Pesquisar");
+        printf("\n9 - Sair\n");
+        printf("--> ");
+        scanf("%d",&resp);
+        fflush(stdin);
 
-        Menu();
-        scanf("%d", &opcao);
-        system("cls");
+        switch(resp){
+        case 1:
+            cadastro(p,&i);
+            break;
 
-        switch (opcao) {
-            case 0:
-                printf("saiu");
-                break;
+        case 3:
+            consultar(p,i);
+            break;
 
-            case 1:
-                printf("1 opcao");
-                AdicionarNome(indiceRegistro++);
-                break;
+        case 9:
+            break;
 
-            case 2:
-                printf("2 opcao");
-                break;
-            
-            case 3:
-                printf("3 opcao");
-                break;
-            
-            case 4:
-                printf("4 opcao");
-                break;
-            
-            default:
-                printf("Opcao invalida! Tente novamente!\n");
-                break;
+        default:
+            printf("Opcao invalida! ");
         }
-    } while (opcao != 0);
-    
+
+        printf("\n\nPressione ENTER para continuar...");
+        getchar();
+        system("cls");
+    }
+
     return 0;
 }
 
-/*
-================================================
-Menu
- 
-Imprime o menu para interacao com o usuario
-================================================
-*/
-void Menu() {
-
-    printf("1) Adicionar nome\n");
-    printf("2) Remover nome\n");
-    printf("3) Buscar\n");
-    printf("4) Listar\n");
-    printf("0) Sair\n");
-}
-
-/*
-================================================
-AdicionarNome
- 
-Funcao para adicionar nomes ao vetor
-================================================
-*/
-void AdicionarNome(int indiceRegistro) {
-    char dado[MAX];
-
-    printf("Digite o nome: \n");
-    scanf("%s", dado);
-    //X
-    setbuf(stdin, NULL);
-
-    pessoa[indiceRegistro].nome = AlocarMemoria(strlen(dado));
-    strcpy(pessoa[indiceRegistro].nome, dado);
-}
-
-/*
-================================================
-AlocarMemoria
- 
-Funcao para alocar corretamente o espaco de memoria para os dados
-
-================================================
-*/
-char* AlocarMemoria(int tamanho){
-    char* dado = NULL;
-    dado = (char*) malloc(sizeof(tamanho) * sizeof(char));
-
-    if(dado == NULL){
-        printf("ERRO: impossível alocar a quantidade de memória requisitada!");
+agenda* alocar()
+{
+    agenda *p = (agenda*) malloc(1*sizeof(agenda));
+    if (p!= NULL)
+    {
+        return p;
+    }
+    else
+    {
+        printf("\nMEMORIA INSUFICIENTE\n");
         exit(1);
     }
-    return dado;
+}
+
+int realocar(agenda *p,int i)
+{
+    p = (agenda*) realloc(p,i*sizeof(agenda));
+    if(p!= NULL)
+    {
+        //printf("\nRealocado com sucesso!");
+        return 1;
+    }
+    else
+    {
+        //printf("\nN foi possivel realocar!");
+        return 0;
+    }
+}
+
+void cadastro(agenda*p, int *i)
+{
+    if(!realocar(p, *i+1)){ // se não conseguir realocar
+        printf("\nN foi possivel adicionar novo contato!");
+        return;
+    }
+    //int resp;
+    int j = *i;
+
+    printf("Digite o nome: ");
+    gets(p[j].nome);
+    printf("Digite o email: ");
+    gets(p[j].email);
+    printf("Digite um telefone: ");
+    gets(p[j].telefone);
+    j++;
+    *i = j;
+    /*printf("\nCadastrar mais (s-1/n-0): ");
+    scanf("%d",&resp);
+    system("cls");
+    while (resp == 1)
+    {
+        realocar(p,j);
+        fflush(stdin);
+        printf("\nDigite o nome: ");
+        gets(p[j].nome);
+        printf("Digite o email: ");
+        gets(p[j].email);
+        printf("Digite um telefone: ");
+        gets(p[j].telefone);
+        printf("\nCadastrar mais (s-1/n-0): ");
+        scanf("%d",&resp);
+    }//*/
+}
+
+void consultar(agenda *p, int i)
+{
+    if(i == 0)
+    {
+        printf("\nSem registro!\n");
+        return;
+    }
+
+    int k;
+    for (k = 0; k < i; k++)
+    {
+        printf("\nID: %03d", k);
+        printf("\nNome: %s",p[k].nome);
+        printf("\nEmail: %s",p[k].email);
+        printf("\nTelefone: %s\n",p[k].telefone);
+    }
 }
