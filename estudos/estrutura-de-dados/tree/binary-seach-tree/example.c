@@ -5,6 +5,7 @@
 
 typedef struct node {
     int data;
+    int height;
     struct node* pLeft;
     struct node* pRight;
 } node;
@@ -85,6 +86,47 @@ int treeHeight(node** root) {
 
 /*
 ===================================
+nodeHeight
+
+    node height
+===================================
+*/
+int nodeHeight(node* node) {
+    if (node == NULL) {
+        return -1;
+    } else {
+        return node->height;
+    }    
+}
+
+/*
+===================================
+balanceFactor
+
+    balance factor
+===================================
+*/
+int balanceFactor(node* node) {
+    return labs(nodeHeight(node->pLeft) - nodeHeight(node->pRight));
+}
+
+/*
+============================================
+greater
+
+    return the greater value between x and y
+============================================
+*/
+int greater(int x, int y) {
+    if (x > y) {
+        return x;
+    } else {
+        return y;
+    }
+}
+
+/*
+===================================
 totalNodes
 
     total nodes
@@ -148,6 +190,82 @@ void postOrder(node* root) {
     printf("%d, ", root->data);
 }
 
+//ROTATIONS
+
+/*
+===================================
+rotationLL
+
+    rotation left
+===================================
+*/
+void rotationLL(node** root) {
+    struct node* rootPtr = *root;
+    struct node* node;
+
+    node = rootPtr->pLeft;
+
+    rootPtr->pLeft = node->pRight;
+
+    node->pRight = rootPtr; // ?????????
+
+    rootPtr->height = greater(nodeHeight(rootPtr->pLeft), nodeHeight(rootPtr->pRight)) + 1;
+
+    node->height = greater(nodeHeight(node->pLeft), rootPtr->height) + 1;
+
+    rootPtr = node;
+}
+
+/*
+===================================
+rotationRR
+
+    rotation right
+===================================
+*/
+void rotationRR(node** root) {
+    struct node* rootPtr = *root;
+    struct node* node;
+
+    node = rootPtr->pRight;
+
+    rootPtr->pRight = node->pLeft;
+
+    node->pLeft = rootPtr;
+
+    rootPtr->height = greater(nodeHeight(rootPtr->pLeft), nodeHeight(rootPtr->pRight)) + 1;
+
+    node->height = greater(nodeHeight(node->pRight), rootPtr->height) + 1;
+
+    rootPtr = node;
+}
+
+/*
+===================================
+rotationLR
+
+    rotation LR
+===================================
+*/
+void rotationLR(node** root) {
+    node* rootPtr = *root;
+    rotationRR(&rootPtr->pLeft);
+    rotationLL(root);
+}
+
+/*
+===================================
+rotationRL
+
+    rotation RL
+===================================
+*/
+void rotationRL(node** root) {
+    node* rootPtr = *root;
+    rotationLL(&rootPtr->pRight);
+    rotationRR(root);
+}
+
 /*
 ===================================
 createNode
@@ -160,9 +278,9 @@ node* createNode(int data) {
     node *newNode = malloc(sizeof(node));
 
     if (newNode != NULL) {
+        newNode->data = data;
         newNode->pLeft = NULL;
         newNode->pRight = NULL;
-        newNode->data = data;
     }
 
     return newNode;
@@ -184,20 +302,42 @@ bool insert(node** root, int data) {
         return true;
     }
     
-    //value already exists in the tree
-    if (data == rootPtr->data) {
-        return false;
-    }
-
-    //less than the root value
     if (data < rootPtr->data) {
-        return insert(&(rootPtr->pLeft), data);
-    } 
 
-    //greater than the root value
-    if (data > rootPtr->data) {
-        return insert(&(rootPtr->pRight), data);
+        if (insert(&rootPtr->pLeft, data)) {
+
+            if (balanceFactor(rootPtr) >= 2) {
+
+                if (data < rootPtr->pLeft->data) {
+                    rotationLL(root);
+                } else {
+                    rotationLR(root);
+                }
+            }
+        }
+    } else {
+        if (data > rootPtr->data) {
+
+            if (insert(&rootPtr->pRight, data)) {
+
+                if (balanceFactor(rootPtr) >= 2) {
+
+                    if (data > rootPtr->pRight->data) {
+                        rotationRR(root);
+                    } else {
+                        rotationRL(root);
+                    }
+                }
+            }
+        } else {
+            printf("Duplicated value!");
+            return 0;
+        }
     }
+
+    rootPtr->height = greater(nodeHeight(rootPtr->pLeft), nodeHeight(rootPtr->pRight)) + 1;
+
+    return 1;
 }
 
 /*
@@ -303,7 +443,7 @@ int main(int argc, char const *argv[]) {
     insert(&root, 4);
     insert(&root, 1);
 
-    removeNode(root, 2);
+    //removeNode(root, 2);
 
     printf("\nPOST ORDER: \n");
     postOrder(root);
