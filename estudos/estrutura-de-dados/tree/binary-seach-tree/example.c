@@ -78,9 +78,9 @@ int treeHeight(node** root) {
     int rightHeight = treeHeight(&rootPtr->pRight);
 
     if (leftHeight > rightHeight) {
-        return leftHeight + 1;
+        return (leftHeight + 1);
     } else {
-        return rightHeight + 1;
+        return (rightHeight + 1);
     }
 }
 
@@ -199,22 +199,41 @@ rotationLL
     rotation left
 ===================================
 */
-void rotationLL(node** root) {
-    struct node* rootPtr = *root;
-    struct node* node;
 
-    node = rootPtr->pLeft;
+void rotationLL(node **root){//LL
 
-    rootPtr->pLeft = node->pRight;
+    struct node *node;
 
-    node->pRight = rootPtr; // ?????????
+    node = (*root)->pLeft;
 
-    rootPtr->height = greater(nodeHeight(rootPtr->pLeft), nodeHeight(rootPtr->pRight)) + 1;
+    (*root)->pLeft = node->pRight;
 
-    node->height = greater(nodeHeight(node->pLeft), rootPtr->height) + 1;
+    node->pRight = *root;
 
-    rootPtr = node;
+    (*root)->height = greater(nodeHeight((*root)->pLeft),nodeHeight((*root)->pRight)) + 1;
+
+    node->height = greater(nodeHeight(node->pLeft),(*root)->height) + 1;
+    
+    *root = node;
 }
+
+// void rotationLL(node** root) {
+//     struct node* rootPtr = *root;
+
+//     struct node* node;
+
+//     node = rootPtr->pLeft;
+
+//     rootPtr->pLeft = node->pRight;
+
+//     node->pRight = rootPtr;
+
+//     rootPtr->height = greater(nodeHeight(rootPtr->pLeft), nodeHeight(rootPtr->pRight)) + 1;
+
+//     node->height = greater(nodeHeight(node->pLeft), rootPtr->height) + 1;
+
+//     rootPtr = node;
+// }
 
 /*
 ===================================
@@ -223,22 +242,41 @@ rotationRR
     rotation right
 ===================================
 */
-void rotationRR(node** root) {
-    struct node* rootPtr = *root;
-    struct node* node;
 
-    node = rootPtr->pRight;
+void rotationRR(node **root){//RR
 
-    rootPtr->pRight = node->pLeft;
+    struct node *node;
 
-    node->pLeft = rootPtr;
+    node = (*root)->pRight;
 
-    rootPtr->height = greater(nodeHeight(rootPtr->pLeft), nodeHeight(rootPtr->pRight)) + 1;
+    (*root)->pRight = node->pLeft;
 
-    node->height = greater(nodeHeight(node->pRight), rootPtr->height) + 1;
+    node->pLeft = *root;
 
-    rootPtr = node;
+    (*root)->height = greater(nodeHeight((*root)->pLeft),nodeHeight((*root)->pRight)) + 1;
+
+    node->height = greater(nodeHeight(node->pRight),(*root)->height) + 1;
+    
+    *root = node;
 }
+
+// void rotationRR(node** root) {
+//     struct node* rootPtr = *root;
+
+//     struct node* node;
+
+//     node = rootPtr->pRight;
+
+//     rootPtr->pRight = node->pLeft;
+
+//     node->pLeft = rootPtr;
+
+//     rootPtr->height = greater(nodeHeight(rootPtr->pLeft), nodeHeight(rootPtr->pRight)) + 1;
+
+//     node->height = greater(nodeHeight(node->pRight), rootPtr->height) + 1;
+
+//     rootPtr = node;
+// }
 
 /*
 ===================================
@@ -247,6 +285,12 @@ rotationLR
     rotation LR
 ===================================
 */
+
+// void rotationLR(node **A){//LR
+//     rotationRR(&(*A)->pLeft);
+//     rotationLL(A);
+// }
+
 void rotationLR(node** root) {
     node* rootPtr = *root;
     rotationRR(&rootPtr->pLeft);
@@ -260,6 +304,11 @@ rotationRL
     rotation RL
 ===================================
 */
+// void rotationRL(node **A){//RL
+//     rotationLL(&(*A)->pRight);
+//     rotationRR(A);
+// }
+
 void rotationRL(node** root) {
     node* rootPtr = *root;
     rotationLL(&rootPtr->pRight);
@@ -279,6 +328,7 @@ node* createNode(int data) {
 
     if (newNode != NULL) {
         newNode->data = data;
+        newNode->height = 0;
         newNode->pLeft = NULL;
         newNode->pRight = NULL;
     }
@@ -293,22 +343,22 @@ insert
     insert a new node into the tree
 ===================================
 */
-bool insert(node** root, int data) {
+int insert(node** root, int data) {
 
-    node *rootPtr = *root;
-
-    if (rootPtr == NULL) {
+    if (*root == NULL) {
         *root = createNode(data);
         return true;
     }
-    
+
+    node *rootPtr = *root;
+
     if (data < rootPtr->data) {
 
         if (insert(&rootPtr->pLeft, data)) {
 
             if (balanceFactor(rootPtr) >= 2) {
 
-                if (data < rootPtr->pLeft->data) {
+                if (data < (*root)->pLeft->data) {
                     rotationLL(root);
                 } else {
                     rotationLR(root);
@@ -322,7 +372,7 @@ bool insert(node** root, int data) {
 
                 if (balanceFactor(rootPtr) >= 2) {
 
-                    if (data > rootPtr->pRight->data) {
+                    if ((*root)->pRight->data < data) {
                         rotationRR(root);
                     } else {
                         rotationRL(root);
@@ -365,41 +415,152 @@ removeNode
     remove a node
 =========================================
 */
-node* removeNode(node* root, int key) {
+int removeNode(node **root, int valor){
+	if(*root == NULL){// valor n�o existe
+	    printf("This value doesn't exist!\n");
+	    return 0;
+	}
 
-    if (root == NULL) {
-        return root;
-    }
-  
-    if (key < root->data) {
-        root->pLeft = removeNode(root->pLeft, key);
-  
-    } else if (key > root->data) {
-        root->pRight = removeNode(root->pRight, key);
-  
-    } else {
-        if (root->pLeft == NULL) {
-            struct node* temp = root->pRight;
-            free(root);
-            return temp;
-        }
-        else if (root->pRight == NULL) {
-            struct node* temp = root->pLeft;
-            free(root);
-            return temp;
-        }
-  
-        struct node* temp = minValueNode(root->pRight);
+    int res;
 
-        root->data = temp->data;
-  
-        root->pRight = removeNode(root->pRight, temp->data);
-    }
+	if(valor < (*root)->data){
+	    if((res = removeNode(&(*root)->pLeft,valor)) == 1){
+            if(balanceFactor(*root) >= 2){
+                if(nodeHeight((*root)->pRight->pLeft) <= nodeHeight((*root)->pRight->pRight)) {
+                    rotationRR(root);
+                } else {
+                    rotationLR(root);
+                }
+            }
+	    }
+	}
 
-    return root;
+	if((*root)->data < valor){
+	    if((res = removeNode(&(*root)->pRight, valor)) == 1){
+            if(balanceFactor(*root) >= 2){
+                if(nodeHeight((*root)->pLeft->pRight) <= nodeHeight((*root)->pLeft->pLeft) ) {
+                    rotationLL(root);
+                } else {
+                    rotationLR(root);
+                }
+            }
+	    }
+	}
+
+	if((*root)->data == valor){
+	    if(((*root)->pLeft == NULL || (*root)->pRight == NULL)){// n� tem 1 filho ou nenhum
+			struct node *oldNode = (*root);
+			if((*root)->pLeft != NULL)
+                *root = (*root)->pLeft;
+            else
+                *root = (*root)->pRight;
+			free(oldNode);
+		}else { // n� tem 2 filhos
+			struct node* temp = minValueNode((*root)->pRight);
+			(*root)->data = temp->data;
+			removeNode(&(*root)->pRight, (*root)->data);
+            if(balanceFactor(*root) >= 2){
+				if(nodeHeight((*root)->pLeft->pRight) <= nodeHeight((*root)->pLeft->pLeft)) {
+					rotationLL(root);
+                } else {
+					rotationLR(root);
+                }
+			}
+		}
+        
+		if (*root != NULL)
+            (*root)->height = greater(nodeHeight((*root)->pLeft),nodeHeight((*root)->pRight)) + 1;
+		return 1;
+	}
+
+	(*root)->height = greater(nodeHeight((*root)->pLeft),nodeHeight((*root)->pRight)) + 1;
+
+	return res;
 }
 
+// int removeNode(node** root, int data) {
+
+//     if (*root == NULL) {
+//         printf("This value doesn't exist!\n");
+//         return 0;
+//     }
+
+//     node *rootPtr = *root;
+//     int res;
+
+//     if (data < rootPtr->data) {
+
+//         if ((res = removeNode(&rootPtr->pLeft, data)) == 1) {
+
+//             if (balanceFactor(rootPtr) >= 2) {
+
+//                 if (nodeHeight(rootPtr->pRight->pLeft) <= nodeHeight(rootPtr->pRight->pRight)) {
+//                     rotationRR(root);
+//                 } else {
+//                     rotationRL(root);
+//                 }
+//             }
+//         }
+//     } 
+        
+//     if (rootPtr->data < data) {
+
+//         if ((res = removeNode(&rootPtr->pRight, data)) == 1) {
+
+//             if (balanceFactor(rootPtr) >= 2) {
+
+//                 if (nodeHeight(rootPtr->pLeft->pRight) <= nodeHeight(rootPtr->pLeft->pLeft)) {
+//                     rotationLL(root);
+//                 } else {
+//                     rotationLR(root);
+//                 }
+//             }
+//         }
+//     } 
+
+//     if (rootPtr->data == data) {
+        
+//         if ( (rootPtr->pLeft == NULL || rootPtr->pRight == NULL) ) {
+
+//             struct node* oldNode = rootPtr;
+
+//             if (rootPtr->pLeft != NULL) {
+//                 rootPtr = rootPtr->pLeft;
+//             } else {
+//                 rootPtr = rootPtr->pRight;
+//             }
+//             free(oldNode);
+
+//         } else { //two children
+        
+//             struct node* temp = minValueNode(rootPtr->pRight);
+
+//             rootPtr->data = temp->data;
+
+//             removeNode(&rootPtr->pRight, rootPtr->data);
+
+//             if (balanceFactor(rootPtr) >= 2) {
+//                 if (nodeHeight(rootPtr->pLeft->pRight) <= nodeHeight(rootPtr->pLeft->pLeft)) {
+//                     rotationLL(root);
+//                 } else {
+//                     rotationLR(root);
+//                 }
+//             }  
+//         }
+//         if (rootPtr != NULL) {
+//             rootPtr->height = greater(nodeHeight(rootPtr->pLeft), nodeHeight(rootPtr->pRight)) + 1;
+            
+//             return 1;
+//         }
+//     }
+
+//     rootPtr->height = greater(nodeHeight(rootPtr->pLeft), nodeHeight(rootPtr->pRight)) + 1;
+
+//     return res;
+// }
+
 /*
+
 ===================================
 find
 
@@ -436,14 +597,19 @@ int main(int argc, char const *argv[]) {
 
     //---------------------------------------------------
 
-    insert(&root, 5);
-    insert(&root, 3);
-    insert(&root, 7);
-    insert(&root, 2);
-    insert(&root, 4);
     insert(&root, 1);
+    insert(&root, 2);
+    insert(&root, 3);
+    insert(&root, 10);
+    insert(&root, 4);
+    insert(&root, 5);
+    insert(&root, 9);
+    insert(&root, 6);
+    insert(&root, 7);
+    insert(&root, 8);
 
-    //removeNode(root, 2);
+    removeNode(&root, 2);
+    removeNode(&root, 1);
 
     printf("\nPOST ORDER: \n");
     postOrder(root);
@@ -470,7 +636,7 @@ int main(int argc, char const *argv[]) {
 
     printf("FINDING ON TREE: (0) FALSE | (1) TRUE\n");
     printf("%d (%d)\n", 16, find(root, 16));
-    printf("%d (%d)\n", 50, find(root, 50));
+    printf("%d (%d)\n", 10, find(root, 10));
     printf("%d (%d)\n", 5, find(root, 5));
 
     printf("\nDONE IT!");
