@@ -416,7 +416,7 @@ removeNode
 =========================================
 */
 int removeNode(node **root, int valor){
-	if(*root == NULL){// valor n�o existe
+	if(*root == NULL){
 	    printf("This value doesn't exist!\n");
 	    return 0;
 	}
@@ -448,14 +448,14 @@ int removeNode(node **root, int valor){
 	}
 
 	if((*root)->data == valor){
-	    if(((*root)->pLeft == NULL || (*root)->pRight == NULL)){// n� tem 1 filho ou nenhum
+	    if(((*root)->pLeft == NULL || (*root)->pRight == NULL)){
 			struct node *oldNode = (*root);
 			if((*root)->pLeft != NULL)
                 *root = (*root)->pLeft;
             else
                 *root = (*root)->pRight;
 			free(oldNode);
-		}else { // n� tem 2 filhos
+		}else {
 			struct node* temp = minValueNode((*root)->pRight);
 			(*root)->data = temp->data;
 			removeNode(&(*root)->pRight, (*root)->data);
