@@ -597,19 +597,13 @@ int main(int argc, char const *argv[]) {
 
     //---------------------------------------------------
 
-    insert(&root, 1);
-    insert(&root, 2);
-    insert(&root, 3);
+    insert(&root, 27);
     insert(&root, 10);
-    insert(&root, 4);
-    insert(&root, 5);
-    insert(&root, 9);
-    insert(&root, 6);
-    insert(&root, 7);
-    insert(&root, 8);
+    insert(&root, 19);
+    insert(&root, 91);
+    insert(&root, 90);
+    insert(&root, 72);
 
-    removeNode(&root, 2);
-    removeNode(&root, 1);
 
     printf("\nPOST ORDER: \n");
     postOrder(root);
@@ -617,6 +611,11 @@ int main(int argc, char const *argv[]) {
     inOrder(root);
     printf("\nPRE ORDER: \n");
     preOrder(root);
+
+
+    removeNode(&root, 2);
+    removeNode(&root, 1);
+ 
 
     printf("\n\nTREE HEIGHT\n");
     printf("%d\n", treeHeight(&root));
