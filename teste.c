@@ -7,20 +7,25 @@ int main () {
    int ret;
 
 
-   strcpy(str1, "19");
-   strcpy(str2, "27");
+   strcpy(str1, "2");
+   strcpy(str2, "11");
 
    ret = strcmp(str1, str2);
 
-    printf("RET %d\n", ret);
+
+   printf("RET %d\n", ret);
 
    if(ret < 0) {
-      printf("str1 is less than str2");
+      printf("%s is less than %s", str1, str2);
    } else if(ret > 0) {
-      printf("str2 is less than str1");
+      printf("%s is less than %s", str2, str1);
    } else {
-      printf("str1 is equal to str2");
+      printf("%s is equal to %s", str1, str2);
    }
+
+
+
+   
    
    return(0);
 }
