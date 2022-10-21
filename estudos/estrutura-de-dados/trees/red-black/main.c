@@ -306,18 +306,21 @@ int main () {
     insert(&root, 10);
     insert(&root, 18);
     insert(&root, 45);
+    insert(&root, 33);
     insert(&root, 87);
     insert(&root, 90);
     insert(&root, 31);
     insert(&root, 77);
-    insert(&root, 18);
 
     printf("\nPOST ORDER: \n");
     postOrder(root);
-    printf("\nIN ORDER: \n");
-    inOrder(root);
+
     printf("\nPRE ORDER: \n");
     preOrder(root);
+    
+    printf("\nIN ORDER: \n");
+    inOrder(root);
+    
 
     printf("DONE IT!");
 
