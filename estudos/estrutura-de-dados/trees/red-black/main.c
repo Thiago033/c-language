@@ -48,18 +48,37 @@ void changeColor(node* node) {
 
 /*
 ===================================
-move2LeftRed
+moveToLeftRed
 
     move a red node to the left
 ===================================
 */
-node* move2LeftRed(node* node) {
+node* moveToLeftRed(node* node) {
     changeColor(node);
 
     if (color(node->pRight->pLeft) == RED) {
         node->pRight = rotationRight(node->pRight);
 
         node = rotationLeft(node);
+
+        changeColor(node);
+    }
+
+    return node;
+}
+
+/*
+===================================
+moveToRightRed
+
+    move a red node to the right
+===================================
+*/
+node* moveToRightRed(node* node) {
+    changeColor(node);
+
+    if (color(node->pLeft->pLeft) == RED) {
+        node = rotationRight(node);
 
         changeColor(node);
     }
