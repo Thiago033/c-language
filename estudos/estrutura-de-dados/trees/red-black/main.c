@@ -46,6 +46,48 @@ void changeColor(node* node) {
     }
 }
 
+/*
+===================================
+rotationRight
+
+    rotation right
+===================================
+*/
+node* rotationLeft(node* node) {
+    struct node* nodePtr = node->pLeft;
+
+    node->pLeft = nodePtr->pRight;
+
+    nodePtr->pRight = node;
+
+    nodePtr->color = node->color;
+
+    node->color = RED;
+
+    return nodePtr;
+}
+
+/*
+===================================
+rotationLeft
+
+    rotation left
+===================================
+*/
+node* rotationRight(node* node) {
+    struct node* nodePtr = node->pRight;
+
+    node->pRight = nodePtr->pLeft;
+
+    nodePtr->pLeft = node;
+
+    nodePtr->color = node->color;
+
+    node->color = RED;
+
+    return nodePtr;
+}
+
 int main () {
 
     //create root
