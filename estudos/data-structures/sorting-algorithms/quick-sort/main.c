@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 
-
 int partition(int array[], int low, int high) {
     int left, right, pivot, aux;
 
