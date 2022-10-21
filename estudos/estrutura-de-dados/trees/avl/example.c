@@ -642,3 +642,69 @@ int main(int argc, char const *argv[]) {
 
     return 0;
 }
+
+
+
+/*
+===================================
+move2LeftRed
+
+    move a red node to the left
+===================================
+*/
+node* move2LeftRed(node* node) {
+    changeColor(node);
+
+    if (color(node->pRight->pLeft) == RED) {
+        node->pRight = rotationRight(node->pRight);
+
+        node = rotationLeft(node);
+
+        changeColor(node);
+    }
+
+    return node;
+}
+
+
+/*
+===================================
+rotationRight
+
+    rotation right
+===================================
+*/
+node* rotationLeft(node* node) {
+    struct node* nodePtr = node->pLeft;
+
+    node->pLeft = nodePtr->pRight;
+
+    nodePtr->pRight = node;
+
+    nodePtr->color = node->color;
+
+    node->color = RED;
+
+    return nodePtr;
+}
+
+/*
+===================================
+rotationLeft
+
+    rotation left
+===================================
+*/
+node* rotationRight(node* node) {
+    struct node* nodePtr = node->pRight;
+
+    node->pRight = nodePtr->pLeft;
+
+    nodePtr->pLeft = node;
+
+    nodePtr->color = node->color;
+
+    node->color = RED;
+
+    return nodePtr;
+}
