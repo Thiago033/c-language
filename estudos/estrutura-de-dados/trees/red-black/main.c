@@ -78,7 +78,7 @@ int color(node* node) {
 ===================================
 changeColor
 
-    
+    change node color
 ===================================
 */
 void changeColor(node* node) {
@@ -92,8 +92,6 @@ void changeColor(node* node) {
         node->pRight->color = !node->pRight->color;
     }
 }
-
-
 
 /*
 ===================================
@@ -269,7 +267,6 @@ node* insertNode(node* node, int data, int* res) {
     return node;
 }
 
-
 /*
 ===================================
 insert
@@ -289,6 +286,137 @@ int insert(node** root, int data) {
     return res;
 }
 
+/*
+=========================================
+minValueNode
+
+    find minimum value node and return it
+=========================================
+*/
+struct node* minValueNode(struct node* node) {
+    struct node* current = node;
+  
+    //loop down to find the leftmost leaf
+    while (current && current->pLeft != NULL) {
+        current = current->pLeft;
+    }
+        
+    return current;
+}
+
+/*
+===================================
+removeMinimum
+
+    removeMinimum
+===================================
+*/
+struct node* removeMinimum(struct node* node){
+
+    if(node->pLeft == NULL){
+        free(node);
+        return NULL;
+    }
+
+    if(color(node->pLeft) == BLACK && color(node->pLeft->pLeft) == BLACK){
+        node = moveToLeftRed(node);
+    }
+
+    node->pLeft = removeMinimum(node->pLeft);
+
+    return balance(node);
+}
+
+/*
+===================================
+removeNode
+
+    removeNode
+===================================
+*/
+node* removeNode(node* node, int data) {
+    if (data < node->data) {
+        if (color(node->pLeft) == BLACK && color(node->pLeft->pLeft) == BLACK ) {
+            node = moveToLeftRed(node);
+        }
+
+        node->pLeft = removeNode(node->pLeft, data);
+    } else {
+        if (color(node->pLeft) == RED) {
+            node = rotationRight(node);
+        }
+
+        if (data == node->data && (node->pRight == NULL)) {
+            free(node);
+            return NULL;
+        }
+
+        if (color(node->pRight) == BLACK && color(node->pRight->pLeft) == BLACK) {
+            node = moveToRightRed(node);
+        }
+
+        if (data == node->data) {
+            struct node* nodePtr = minValueNode(node->pRight);
+            node->data = nodePtr->data;
+            node->pRight = removeMinimum(node->pRight);
+        } else {
+            node->pRight = removeNode(node->pRight, data);
+        }
+    }
+
+    return balance(node);
+}
+
+/*
+===================================
+searchNode
+
+    search node
+===================================
+*/
+int searchNode(node** raiz, int valor){
+    if(raiz == NULL)
+        return 0;
+
+    struct node* atual = *raiz;
+
+    while(atual != NULL){
+
+        if(valor == atual->data){
+            return 1;
+        }
+        if(valor > atual->data)
+            atual = atual->pRight;
+        else
+            atual = atual->pLeft;
+    }
+    return 0;
+}
+
+/*
+===================================
+remove
+
+    remove
+===================================
+*/
+int removeOnTree(node** root, int data) {
+    if(searchNode(root, data)) {
+        node* node = *root;
+
+        *root = removeNode(node, data);
+
+        if (*root != NULL) {
+            (*root)->color = BLACK;  
+        }
+
+        return 1;
+
+    } else {
+        return 0;
+    }
+}
+
 int main () {
 
     //create root
@@ -303,26 +431,27 @@ int main () {
 
     //---------------------------------------------------
 
-    insert(&root, 10);
-    insert(&root, 18);
-    insert(&root, 45);
-    insert(&root, 33);
-    insert(&root, 87);
-    insert(&root, 90);
-    insert(&root, 31);
-    insert(&root, 77);
+    insert(&root, 50);
+    insert(&root, 21);
+    insert(&root, 85);
+    insert(&root, 70);
+    insert(&root, 20);
+    insert(&root, 30);
+    insert(&root, 15);
+
+    removeOnTree(&root, 15);
 
     printf("\nPOST ORDER: \n");
     postOrder(root);
 
     printf("\nPRE ORDER: \n");
     preOrder(root);
-    
+
     printf("\nIN ORDER: \n");
     inOrder(root);
     
 
-    printf("DONE IT!");
+    printf("\nDONE IT!");
 
    return(0);
 }
