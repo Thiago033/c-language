@@ -191,7 +191,6 @@ void postOrder(node* root) {
 }
 
 //ROTATIONS
-
 /*
 ===================================
 rotationLL
@@ -217,24 +216,6 @@ void rotationLL(node **root){//LL
     *root = node;
 }
 
-// void rotationLL(node** root) {
-//     struct node* rootPtr = *root;
-
-//     struct node* node;
-
-//     node = rootPtr->pLeft;
-
-//     rootPtr->pLeft = node->pRight;
-
-//     node->pRight = rootPtr;
-
-//     rootPtr->height = greater(nodeHeight(rootPtr->pLeft), nodeHeight(rootPtr->pRight)) + 1;
-
-//     node->height = greater(nodeHeight(node->pLeft), rootPtr->height) + 1;
-
-//     rootPtr = node;
-// }
-
 /*
 ===================================
 rotationRR
@@ -259,24 +240,6 @@ void rotationRR(node **root){//RR
     
     *root = node;
 }
-
-// void rotationRR(node** root) {
-//     struct node* rootPtr = *root;
-
-//     struct node* node;
-
-//     node = rootPtr->pRight;
-
-//     rootPtr->pRight = node->pLeft;
-
-//     node->pLeft = rootPtr;
-
-//     rootPtr->height = greater(nodeHeight(rootPtr->pLeft), nodeHeight(rootPtr->pRight)) + 1;
-
-//     node->height = greater(nodeHeight(node->pRight), rootPtr->height) + 1;
-
-//     rootPtr = node;
-// }
 
 /*
 ===================================
@@ -313,6 +276,24 @@ void rotationRL(node** root) {
     node* rootPtr = *root;
     rotationLL(&rootPtr->pRight);
     rotationRR(root);
+}
+
+/*
+=========================================
+minValueNode
+
+    find minimum value node and return it
+=========================================
+*/
+struct node* minValueNode(struct node* node) {
+    struct node* current = node;
+  
+    //loop down to find the leftmost leaf
+    while (current && current->pLeft != NULL) {
+        current = current->pLeft;
+    }
+        
+    return current;
 }
 
 /*
@@ -392,24 +373,6 @@ int insert(node** root, int data) {
 
 /*
 =========================================
-minValueNode
-
-    find minimum value node and return it
-=========================================
-*/
-struct node* minValueNode(struct node* node) {
-    struct node* current = node;
-  
-    //loop down to find the leftmost leaf
-    while (current && current->pLeft != NULL) {
-        current = current->pLeft;
-    }
-        
-    return current;
-}
-
-/*
-=========================================
 removeNode
 
     remove a node
@@ -478,89 +441,7 @@ int removeNode(node **root, int valor){
 	return res;
 }
 
-// int removeNode(node** root, int data) {
-
-//     if (*root == NULL) {
-//         printf("This value doesn't exist!\n");
-//         return 0;
-//     }
-
-//     node *rootPtr = *root;
-//     int res;
-
-//     if (data < rootPtr->data) {
-
-//         if ((res = removeNode(&rootPtr->pLeft, data)) == 1) {
-
-//             if (balanceFactor(rootPtr) >= 2) {
-
-//                 if (nodeHeight(rootPtr->pRight->pLeft) <= nodeHeight(rootPtr->pRight->pRight)) {
-//                     rotationRR(root);
-//                 } else {
-//                     rotationRL(root);
-//                 }
-//             }
-//         }
-//     } 
-        
-//     if (rootPtr->data < data) {
-
-//         if ((res = removeNode(&rootPtr->pRight, data)) == 1) {
-
-//             if (balanceFactor(rootPtr) >= 2) {
-
-//                 if (nodeHeight(rootPtr->pLeft->pRight) <= nodeHeight(rootPtr->pLeft->pLeft)) {
-//                     rotationLL(root);
-//                 } else {
-//                     rotationLR(root);
-//                 }
-//             }
-//         }
-//     } 
-
-//     if (rootPtr->data == data) {
-        
-//         if ( (rootPtr->pLeft == NULL || rootPtr->pRight == NULL) ) {
-
-//             struct node* oldNode = rootPtr;
-
-//             if (rootPtr->pLeft != NULL) {
-//                 rootPtr = rootPtr->pLeft;
-//             } else {
-//                 rootPtr = rootPtr->pRight;
-//             }
-//             free(oldNode);
-
-//         } else { //two children
-        
-//             struct node* temp = minValueNode(rootPtr->pRight);
-
-//             rootPtr->data = temp->data;
-
-//             removeNode(&rootPtr->pRight, rootPtr->data);
-
-//             if (balanceFactor(rootPtr) >= 2) {
-//                 if (nodeHeight(rootPtr->pLeft->pRight) <= nodeHeight(rootPtr->pLeft->pLeft)) {
-//                     rotationLL(root);
-//                 } else {
-//                     rotationLR(root);
-//                 }
-//             }  
-//         }
-//         if (rootPtr != NULL) {
-//             rootPtr->height = greater(nodeHeight(rootPtr->pLeft), nodeHeight(rootPtr->pRight)) + 1;
-            
-//             return 1;
-//         }
-//     }
-
-//     rootPtr->height = greater(nodeHeight(rootPtr->pLeft), nodeHeight(rootPtr->pRight)) + 1;
-
-//     return res;
-// }
-
 /*
-
 ===================================
 find
 
