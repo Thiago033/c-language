@@ -90,15 +90,12 @@ totalNodes
     total nodes
 ===================================
 */
-int totalNodes(node** root) {
-    node* rootPtr = *root;
+int totalNodes(node* root) {
 
     if (root == NULL) return 0;
 
-    if (rootPtr == NULL) return 0;
-
-    int totalLeft = totalNodes(&rootPtr->pLeft);
-    int totalRight = totalNodes(&rootPtr->pRight);
+    int totalLeft = totalNodes(root->pLeft);
+    int totalRight = totalNodes(root->pRight);
 
     return (totalLeft + totalRight + 1);
 }
@@ -110,8 +107,8 @@ minValueNode
     find minimum value node and return it
 =========================================
 */
-struct node* minValueNode(struct node* node) {
-    struct node* current = node;
+node* minValueNode(node* root) {
+    node* current = root;
   
     //loop down to find the leftmost leaf
     while (current && current->pLeft != NULL) {
@@ -264,11 +261,12 @@ node* removeNode(node* root, int key) {
         if (root->pLeft == NULL) {
             struct node* temp = root->pRight;
             free(root);
+            root = NULL;
             return temp;
-        }
-        else if (root->pRight == NULL) {
+        } else if (root->pRight == NULL) {
             struct node* temp = root->pLeft;
             free(root);
+            root = NULL;
             return temp;
         }
   
@@ -304,21 +302,27 @@ int main(int argc, char const *argv[]) {
     insert(&root, 15);
     insert(&root, 8);
 
-    removeNode(root, 15);
-    removeNode(root, 10);
+    root = removeNode(root, 10);
+    root = removeNode(root, 11);
+    root = removeNode(root, 7);
+    root = removeNode(root, 12);
+    root = removeNode(root, 9);
+    root = removeNode(root, 8);
+    root = removeNode(root, 15);
 
-    printf("\nPOST ORDER: \n");
-    postOrder(root);
-    printf("\nIN ORDER: \n");
-    inOrder(root);
+
     printf("\nPRE ORDER: \n");
     preOrder(root);
+    printf("\nIN ORDER: \n");
+    inOrder(root);
+    printf("\nPOST ORDER: \n");
+    postOrder(root);
 
     printf("\n\nTREE HEIGHT\n");
     printf("%d\n", treeHeight(&root));
 
     printf("TOTAL NODES\n");
-    printf("%d\n", totalNodes(&root));
+    printf("%d\n", totalNodes(root));
 
     printf("MINIMUM NODE\n");
     node* minimumNode = minValueNode(root);
