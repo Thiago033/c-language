@@ -38,7 +38,7 @@ void freeTree(node** root) {
 
     freeNode(*root);
 
-    free(root);    
+    free(root);
 }
 
 /*
@@ -104,6 +104,47 @@ int totalNodes(node** root) {
 }
 
 /*
+=========================================
+minValueNode
+
+    find minimum value node and return it
+=========================================
+*/
+struct node* minValueNode(struct node* node) {
+    struct node* current = node;
+  
+    //loop down to find the leftmost leaf
+    while (current && current->pLeft != NULL) {
+        current = current->pLeft;
+    }
+        
+    return current;
+}
+
+/*
+===================================
+find
+
+    find a node in the tree
+===================================
+*/
+bool find(node *root, int key) {
+    if (root == NULL) return false;
+
+    if (root->data == key) return true;
+
+    //greater than the root value
+    if (key > root->data) {
+        return find(root->pRight, key);
+    }
+
+    //less than the root value
+    if (key < root->data) {
+        return find(root->pLeft, key);
+    }
+}
+
+/*
 ===================================
 preOrder
 
@@ -157,7 +198,7 @@ createNode
 */
 node* createNode(int data) {
 
-    node *newNode = malloc(sizeof(node));
+    node* newNode = malloc(sizeof(node));
 
     if (newNode != NULL) {
         newNode->pLeft = NULL;
@@ -202,24 +243,6 @@ bool insert(node** root, int data) {
 
 /*
 =========================================
-minValueNode
-
-    find minimum value node and return it
-=========================================
-*/
-struct node* minValueNode(struct node* node) {
-    struct node* current = node;
-  
-    //loop down to find the leftmost leaf
-    while (current && current->pLeft != NULL) {
-        current = current->pLeft;
-    }
-        
-    return current;
-}
-
-/*
-=========================================
 removeNode
 
     remove a node
@@ -259,29 +282,6 @@ node* removeNode(node* root, int key) {
     return root;
 }
 
-/*
-===================================
-find
-
-    find a node in the tree
-===================================
-*/
-bool find(node *root, int key) {
-    if (root == NULL) return false;
-
-    if (root->data == key) return true;
-
-    //greater than the root value
-    if (key > root->data) {
-        return find(root->pRight, key);
-    }
-
-    //less than the root value
-    if (key < root->data) {
-        return find(root->pLeft, key);
-    }
-}
-
 int main(int argc, char const *argv[]) {
     
     //create root
@@ -296,14 +296,16 @@ int main(int argc, char const *argv[]) {
 
     //---------------------------------------------------
 
-    insert(&root, 5);
-    insert(&root, 3);
+    insert(&root, 10);
+    insert(&root, 11);
     insert(&root, 7);
-    insert(&root, 2);
-    insert(&root, 4);
-    insert(&root, 1);
+    insert(&root, 12);
+    insert(&root, 9);
+    insert(&root, 15);
+    insert(&root, 8);
 
-    removeNode(root, 2);
+    removeNode(root, 15);
+    removeNode(root, 10);
 
     printf("\nPOST ORDER: \n");
     postOrder(root);
