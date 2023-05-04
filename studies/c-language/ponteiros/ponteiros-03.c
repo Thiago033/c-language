@@ -1,10 +1,3 @@
-/*
-    ======================================
-    |   CODIGO SOMENTE PARA EXPLICACAO   |
-    |       ELE NAO IRA COMPILAR         |
-    ======================================
-*/
-
 #include <stdio.h>
 
 int main() {
