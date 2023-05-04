@@ -12,6 +12,8 @@ int main()
     //warning: assignment to 'float *' from incompatible pointer type 'int *'
     //p3 = p1;
 
+    //*p2 = *p2 + 2;
+
     printf("%d\n", *p1);
     printf("%d\n", *p2);
 

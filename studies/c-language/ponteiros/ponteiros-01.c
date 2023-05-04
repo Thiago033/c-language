@@ -18,7 +18,7 @@ int main()
     //Vai no endereco de memoria onde esta a variavel "i" e adiciona 5 ao seu valor
     *p = *p + 5;
 
-    // i++;
+    //i++;
 
     printf("%d \n", i);
     printf("%d \n", *p);
